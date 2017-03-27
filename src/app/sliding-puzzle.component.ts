@@ -12,8 +12,8 @@ export class SlidingPuzzleComponent implements OnInit {
   imageUrl: string = "/image2.jpg";
   block_size = 100;
   margin = 5;
-  readonly row_count = 3;
-  readonly col_count = 3;
+  readonly row_count = 2;
+  readonly col_count = 2;
   readonly blank_block_id = this.row_count * this.col_count - 1;
   blank_block: Block;
   blocks : Block[] = [];      // order never changes
@@ -75,6 +75,7 @@ export class SlidingPuzzleComponent implements OnInit {
     let range = Array(this.row_count * this.col_count).fill(0).map((v, i) => i);
     let shaffled = SlidingPuzzleComponent.shuffleArray(range);
 
+    console.log("before", shaffled);
     // if it's not solvable, swap two non-blank blocks to make it solvable
     if (!SlidingPuzzleComponent.isSolvable(shaffled, this.row_count, this.col_count)) {
       const blank_id = shaffled.indexOf(Math.max(...shaffled));
@@ -90,8 +91,9 @@ export class SlidingPuzzleComponent implements OnInit {
         shaffled[0] = shaffled[1];
         shaffled[1] = temp;
       }
+      console.log("after", shaffled);
+    } {
     }
-    console.log(shaffled);
 
     for (let i = 0; i < this.row_count; i++) {
       for (let j = 0; j < this.col_count; j++) {
@@ -118,10 +120,12 @@ export class SlidingPuzzleComponent implements OnInit {
     if (blocks.length !== rows * cols) throw Error("isSolvable: invalid parameters");
     
     const inv_count = SlidingPuzzleComponent.countInversions(blocks);
+    console.log(inv_count);
     if (cols % 2 === 1) {
       return inv_count % 2 === 0;
     } else {
-      const blank_row = blocks.indexOf(Math.max(...blocks)) % cols;
+      const blank_row = Math.floor(blocks.indexOf(Math.max(...blocks)) / cols);
+      console.log(blank_row);
       return (inv_count + rows - (blank_row + 1)) % 2 === 0;
     }
   }
