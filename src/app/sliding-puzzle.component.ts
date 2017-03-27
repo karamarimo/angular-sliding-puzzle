@@ -12,8 +12,8 @@ export class SlidingPuzzleComponent implements OnInit {
   imageUrl: string = "/image2.jpg";
   block_size = 100;
   margin = 5;
-  readonly row_count = 2;
-  readonly col_count = 2;
+  readonly row_count = 3;
+  readonly col_count = 4;
   readonly blank_block_id = this.row_count * this.col_count - 1;
   blank_block: Block;
   blocks : Block[] = [];      // order never changes
