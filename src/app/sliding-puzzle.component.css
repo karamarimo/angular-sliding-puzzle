@@ -1,0 +1,39 @@
+.board {
+  display: inline-block;
+  position: relative;
+}
+
+.blocks {
+  display: inline-block;
+  position: relative;
+  background-color: mediumslateblue;
+}
+
+.block {
+  position: absolute;
+  border-radius: 5px;
+  font-size: large;
+  color: red;
+  transition: top 0.5s, left 0.5s;
+}
+
+.result-wrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.result {
+  background-color: white;
+  padding: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

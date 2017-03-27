@@ -1,0 +1,23 @@
+<div class="board">
+  <!--<button (click)="row_count = (row_count == 0) ? 0 : row_count - 1; $event.stopPropagation()">-</button> Row
+  <button (click)="row_count = row_count + 1; $event.stopPropagation()">+</button>-->
+  <div class="blocks"
+       [style.width.px]="(block_size + margin) * col_count"
+       [style.height.px]="(block_size + margin) * row_count">
+    <ng-template ngFor let-id [ngForOf]="(col_count * row_count) | rangeArray">
+      <div class="block" [ngStyle]="getStylesForBlockFor(id)"
+            (click)="blockClicked(id); $event.stopPropagation()">
+        {{id}}
+      </div>
+    </ng-template>
+  </div>
+  <div class="result-wrapper" *ngIf="showingResult">
+    <div class="result">
+      <p>
+        Congratulations!
+      </p>
+      <button (click)="closeResult()">Close</button>
+    </div>
+  </div>
+</div>
+<span>{{areAllBlocksInPlace() ? "Complete" : "Incomplete"}}</span>
