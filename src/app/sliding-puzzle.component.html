@@ -7,7 +7,7 @@
     <ng-template ngFor let-id [ngForOf]="(col_count * row_count) | rangeArray">
       <div class="block" [ngStyle]="getStylesForBlockFor(id)"
             (click)="blockClicked(id); $event.stopPropagation()">
-        {{id}}
+        {{showOriginalPos ? id : ""}}
       </div>
     </ng-template>
   </div>
@@ -16,8 +16,9 @@
       <p>
         Congratulations!
       </p>
-      <button (click)="closeResult()">Close</button>
+      <button (click)="closeResult()">Restart</button>
     </div>
   </div>
 </div>
-<span>{{areAllBlocksInPlace() ? "Complete" : "Incomplete"}}</span>
+<br>
+<label><input type="checkbox" [(ngModel)]="showOriginalPos">Show Original Tile Positions</label>
