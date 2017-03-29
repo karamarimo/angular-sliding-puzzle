@@ -1,19 +1,21 @@
 * {
   user-select: none;
   cursor: default;
-
 }
 
 .board {
-  display: inline-block;
+  display: inline-flex;
   position: relative;
-  padding: 30px;
+  padding: 0px;
   background: #B2DFDB;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .blocks {
   display: inline-block;
   position: relative;
+  margin: 30px;
 }
 
 .block {
@@ -29,6 +31,18 @@
   box-shadow: rgba(0,0,0,0.6) 0 0 10px 0;
 }
 
+.controls {
+  background-color: white;
+  padding: 10px 20px;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.controls > * {
+  margin: 10px 0;
+}
+
 .result-wrapper {
   position: absolute;
   left: 0;
@@ -38,14 +52,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .result {
   background-color: white;
-  padding: 100px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-shadow: rgba(0,0,0,0.6) 0 0 20px 0;
 }

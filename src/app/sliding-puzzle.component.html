@@ -10,15 +10,17 @@
         {{showOriginalPos ? id : ""}}
       </div>
     </ng-template>
-  </div>
-  <div class="result-wrapper" *ngIf="showingResult">
-    <div class="result">
-      <p>
-        Congratulations!
-      </p>
-      <button (click)="closeResult()">Restart</button>
+    <div class="result-wrapper" *ngIf="showingResult">
+      <div class="result">
+        <p>
+          Congratulations!
+        </p>
+        <button (click)="closeResult()">Restart</button>
+      </div>
     </div>
   </div>
+  <div class="controls">
+    <label><input type="checkbox" [(ngModel)]="showOriginalPos">Show Original Tile Positions</label>
+    <image-picker (imageSelected)="updateImage($event)"></image-picker>
+  </div>
 </div>
-<br>
-<label><input type="checkbox" [(ngModel)]="showOriginalPos">Show Original Tile Positions</label>

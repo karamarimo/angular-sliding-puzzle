@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';     // for NgModel
 
 import { AppComponent }  from './app.component';
 import { SlidingPuzzleComponent } from './sliding-puzzle.component';
+import { ImagePickerComponent } from './image-picker.component';
 
 import { RangeArray } from './range-array.pipe';
 
@@ -15,6 +16,7 @@ import { RangeArray } from './range-array.pipe';
   declarations: [
     AppComponent,
     SlidingPuzzleComponent,
+    ImagePickerComponent,
     RangeArray
   ],
   providers: [

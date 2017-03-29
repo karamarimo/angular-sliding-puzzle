@@ -11,8 +11,8 @@ export class SlidingPuzzleComponent implements OnInit {
   imageUrl: string = "/image2.jpg";
   block_size = 100;
   margin = 5;
-  readonly row_count = 3;
-  readonly col_count = 4;
+  readonly row_count: number = 3;   // set this to at least 2
+  readonly col_count: number = 3;   // set this to at least 2
   readonly blank_block_id = this.row_count * this.col_count - 1;
   blank_block: Block;
   blocks : Block[] = [];      // order never changes
@@ -21,7 +21,9 @@ export class SlidingPuzzleComponent implements OnInit {
   showOriginalPos = true;
 
   constructor(
-  ) {}
+  ) {
+
+  }
 
   ngOnInit(): void {
     for (let i = 0; i < this.row_count; i++) {
@@ -40,7 +42,15 @@ export class SlidingPuzzleComponent implements OnInit {
 
     this.blank_block = this.blocks[this.blank_block_id];
 
-    this.shuffleBlocks();
+    this.shuffleUntilNotAllInPlace();
+  }
+
+  updateImage(imageUrl: string): void {
+    this.imageUrl = imageUrl;
+    for (var i = 0; i < this.blocks.length; i++) {
+      var block = this.blocks[i];
+      block.styles["background-image"] = `url(${this.imageUrl})`;
+    }
   }
 
   getStylesForBlockFor(id: number): any {
@@ -49,7 +59,6 @@ export class SlidingPuzzleComponent implements OnInit {
 
   private createStylesForBlockAt(row: number, col: number, blank: boolean = false): any {
     let styles = {
-      "position": `absolute`,
       "opacity": blank ? "0" : "1",
       "left": `${col * (this.block_size + this.margin)}px`,
       "top": `${row * (this.block_size + this.margin)}px`,
@@ -62,6 +71,46 @@ export class SlidingPuzzleComponent implements OnInit {
     return styles;
   }
 
+  blockClicked(id: number): void {
+    if (this.showingResult) return;
+
+    let block1 = this.blocks[id];
+    let Y1 = block1.Y;
+    let X1 = block1.X;
+    let Y2 = this.blank_block.Y;
+    let X2 = this.blank_block.X;
+
+    if (Math.abs(Y1 - Y2) + Math.abs(X1 - X2) !== 1) {
+      // do nothing if the clicked block is not next to the blank block
+      return;
+    }
+    // swap two blocks' positions
+    this.swapBlocks(block1, this.blank_block);
+
+    if (this.areAllBlocksInPlace()) {
+      this.showingResult = true;
+      this.blank_block.styles.opacity = 1;
+    }
+  }
+
+  areAllBlocksInPlace(): boolean {
+    for (let i = 0; i < this.blocks.length; i++) {
+      let block = this.blocks[i];
+      let originX = i % this.col_count;
+      let originY = (i - originX) / this.col_count; 
+      if (block.Y !== originY || block.X !== originX) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  closeResult() {
+    this.showingResult = false;
+    this.shuffleUntilNotAllInPlace();
+    this.blank_block.styles.opacity = 0;
+  }
+
   private placeBlockAt(block: Block, row: number, col: number): void {
     block.styles.left = `${col * (this.block_size + this.margin)}px`;
     block.styles.top = `${row * (this.block_size + this.margin)}px`;
@@ -70,11 +119,20 @@ export class SlidingPuzzleComponent implements OnInit {
     this.blockMap[row][col] = block;
   }
 
-  private shuffleBlocks() {
-    let range = Array(this.row_count * this.col_count).fill(0).map((v, i) => i);
-    let shaffled = SlidingPuzzleComponent.shuffleArray(range);
+  private shuffleUntilNotAllInPlace() {
+    if (this.col_count == 1 && this.row_count == 1) {
+      throw Error("shuffleUntilNotAllInPlace: cannot shuffle so that not all are in place because of too few tiles");
+    }
+    while(this.areAllBlocksInPlace()) {
+      this.shuffleBlocks();
+    }
+  }
 
-    console.log("before", shaffled);
+  private shuffleBlocks() {
+    let shaffled = Array(this.row_count * this.col_count).fill(0).map((v, i) => i);
+    SlidingPuzzleComponent.shuffleArray(shaffled);
+
+    // console.log("before", shaffled);
     // if it's not solvable, swap two non-blank blocks to make it solvable
     if (!SlidingPuzzleComponent.isSolvable(shaffled, this.row_count, this.col_count)) {
       const blank_id = shaffled.indexOf(Math.max(...shaffled));
@@ -90,7 +148,7 @@ export class SlidingPuzzleComponent implements OnInit {
         shaffled[0] = shaffled[1];
         shaffled[1] = temp;
       }
-      console.log("after", shaffled);
+      // console.log("after", shaffled);
     } {
     }
 
@@ -119,12 +177,12 @@ export class SlidingPuzzleComponent implements OnInit {
     if (blocks.length !== rows * cols) throw Error("isSolvable: invalid parameters");
     
     const inv_count = SlidingPuzzleComponent.countInversions(blocks);
-    console.log(inv_count);
+    // console.log(inv_count);
     if (cols % 2 === 1) {
       return inv_count % 2 === 0;
     } else {
       const blank_row = Math.floor(blocks.indexOf(Math.max(...blocks)) / cols);
-      console.log(blank_row);
+      // console.log(blank_row);
       return (inv_count + rows - (blank_row + 1)) % 2 === 0;
     }
   }
@@ -160,43 +218,5 @@ export class SlidingPuzzleComponent implements OnInit {
     let X2 = block2.X;
     this.placeBlockAt(block1, Y2, X2);
     this.placeBlockAt(block2, Y1, X1);
-  }
-
-  blockClicked(id: number): void {
-    if (this.showingResult) return;
-
-    let block1 = this.blocks[id];
-    let Y1 = block1.Y;
-    let X1 = block1.X;
-    let Y2 = this.blank_block.Y;
-    let X2 = this.blank_block.X;
-
-    if (Math.abs(Y1 - Y2) + Math.abs(X1 - X2) !== 1) {
-      // do nothing if the clicked block is not next to the blank block
-      return;
-    }
-    // swap two blocks' positions
-    this.swapBlocks(block1, this.blank_block);
-
-    if (this.areAllBlocksInPlace()) {
-      this.showingResult = true;
-    }
-  }
-
-  areAllBlocksInPlace(): boolean {
-    for (let i = 0; i < this.blocks.length; i++) {
-      let block = this.blocks[i];
-      let originX = i % this.col_count;
-      let originY = (i - originX) / this.col_count; 
-      if (block.Y !== originY || block.X !== originX) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  closeResult() {
-    this.showingResult = false;
-    this.shuffleBlocks();
   }
 }
