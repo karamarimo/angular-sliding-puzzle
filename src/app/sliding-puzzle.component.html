@@ -7,10 +7,10 @@
     <ng-template ngFor let-id [ngForOf]="(col_count * row_count) | rangeArray">
       <div class="block" [ngStyle]="getStylesForBlockFor(id)"
             (click)="blockClicked(id); $event.stopPropagation()">
-        {{showOriginalPos ? id : ""}}
+        {{(showOriginalPos && !showingResult) ? id : ""}}
       </div>
     </ng-template>
-    <div class="result-wrapper" *ngIf="showingResult">
+    <div class="result-wrapper" *ngIf="showingResult" [@resultState]="'shown'">
       <div class="result">
         <p>
           Congratulations!
@@ -20,7 +20,24 @@
     </div>
   </div>
   <div class="controls">
-    <label><input type="checkbox" [(ngModel)]="showOriginalPos">Show Original Tile Positions</label>
+    <div class="row-col-buttons">
+      <span>
+        <button (click)="changeSize('r-')" [disabled]="row_count <= 2">-</button>
+        Row
+        <button (click)="changeSize('r+')">+</button>
+      </span>
+      <span>
+        <button (click)="changeSize('c-')" [disabled]="col_count <= 2">-</button>
+        Column
+        <button (click)="changeSize('c+')">+</button>
+      </span>
+    </div>
+    <div>
+      <button (click)="initBlocks()" [disabled]="showingResult">Reshuffle</button>
+    </div>
+    <div>
+      <label><input type="checkbox" [(ngModel)]="showOriginalPos">Show Original Tile Positions</label>
+    </div>
     <image-picker (imageSelected)="updateImage($event)"></image-picker>
   </div>
 </div>

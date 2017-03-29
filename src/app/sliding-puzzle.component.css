@@ -35,12 +35,15 @@
   background-color: white;
   padding: 10px 20px;
   margin: 20px;
-  display: flex;
-  flex-direction: column;
 }
 
 .controls > * {
   margin: 10px 0;
+}
+
+.row-col-buttons {
+  display: flex;
+  justify-content: space-between;
 }
 
 .result-wrapper {

@@ -25,19 +25,20 @@ a {
 }
 button {
   font-family: Arial;
-  background-color: #eee;
+  font-weight: bold;
+  background-color: #009688;
+  color: #fff;
   border: none;
   padding: 5px 10px;
   border-radius: 4px;
   cursor: pointer;
-  cursor: hand;
 }
-button:hover {
-  background-color: #cfd8dc;
+button:active {
+  background-color: #26A69A;
 }
 button:disabled {
-  background-color: #eee;
-  color: #aaa;
+  background-color: #B2DFDB;
+  color: #fff;
   cursor: auto;
 }
 

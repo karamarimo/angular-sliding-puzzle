@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,  } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 import { Block } from './block';
 
@@ -6,17 +7,34 @@ import { Block } from './block';
   selector: 'sliding-puzzle',
   templateUrl: './sliding-puzzle.component.html',
   styleUrls: ['./sliding-puzzle.component.css'],
+  animations: [
+    trigger('resultState', [
+      state('shown', style({
+        opacity: 1,
+        transform: 'translateY(0)',
+      })),
+      transition('void => shown', [
+        style({
+          opacity: 0,
+          transform: 'translateY(-50%)',
+        }),
+        animate("200ms 1.5s"),
+      ]),
+      transition('shown => void', [
+        animate(200, style({transform: 'translateY(-50%)'})),
+      ]),
+    ]),
+  ],
 })
 export class SlidingPuzzleComponent implements OnInit { 
   imageUrl: string = "/image2.jpg";
   block_size = 100;
-  margin = 5;
-  readonly row_count: number = 3;   // set this to at least 2
-  readonly col_count: number = 3;   // set this to at least 2
-  readonly blank_block_id = this.row_count * this.col_count - 1;
+  margin = 3;
+  row_count: number = 2;   // set this to at least 2
+  col_count: number = 2;   // set this to at least 2
   blank_block: Block;
-  blocks : Block[] = [];      // order never changes
-  blockMap: Block[][] = [];   // block object at each current coords
+  blocks : Block[];      // order never changes
+  blockMap: Block[][];   // block object at each current coords
   showingResult = false;
   showOriginalPos = true;
 
@@ -26,13 +44,20 @@ export class SlidingPuzzleComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initBlocks();
+  }
+
+  initBlocks() {
+    this.blockMap = [];
+    this.blocks = [];
+    let blankId = this.col_count * this.row_count - 1;
     for (let i = 0; i < this.row_count; i++) {
       let row: Block[] = [];
       for (let j = 0; j < this.col_count; j++) {
         let block = new Block();
         block.Y = i;
         block.X = j;
-        let isBlank = (i * this.col_count + j === this.blank_block_id);
+        let isBlank = (i * this.col_count + j === blankId);
         block.styles = this.createStylesForBlockAt(i, j, isBlank);
         row.push(block);
         this.blocks.push(block);
@@ -40,9 +65,36 @@ export class SlidingPuzzleComponent implements OnInit {
       this.blockMap.push(row);
     }
 
-    this.blank_block = this.blocks[this.blank_block_id];
+    this.blank_block = this.blocks[blankId];
 
     this.shuffleUntilNotAllInPlace();
+  }
+
+  changeSize(key: string): void {
+    switch (key) {
+      case 'r-':
+        if (this.row_count >= 3) {
+          this.row_count -= 1;
+          this.initBlocks();
+        }
+        break;
+      case 'r+':
+        this.row_count += 1;
+        this.initBlocks();
+        break;
+      case 'c-':
+        if (this.col_count >= 3) {
+          this.col_count -= 1;
+          this.initBlocks();
+        }
+        break;
+      case 'c+':
+        this.col_count += 1;
+          this.initBlocks();
+        break;
+      default:
+        break;
+    }
   }
 
   updateImage(imageUrl: string): void {
@@ -88,8 +140,7 @@ export class SlidingPuzzleComponent implements OnInit {
     this.swapBlocks(block1, this.blank_block);
 
     if (this.areAllBlocksInPlace()) {
-      this.showingResult = true;
-      this.blank_block.styles.opacity = 1;
+      this.showResult();
     }
   }
 
@@ -103,6 +154,11 @@ export class SlidingPuzzleComponent implements OnInit {
       }
     }
     return true;
+  }
+
+  showResult() {
+    this.showingResult = true;
+    this.blank_block.styles.opacity = 1;
   }
 
   closeResult() {
@@ -123,9 +179,9 @@ export class SlidingPuzzleComponent implements OnInit {
     if (this.col_count == 1 && this.row_count == 1) {
       throw Error("shuffleUntilNotAllInPlace: cannot shuffle so that not all are in place because of too few tiles");
     }
-    while(this.areAllBlocksInPlace()) {
+    do {
       this.shuffleBlocks();
-    }
+    } while(this.areAllBlocksInPlace());
   }
 
   private shuffleBlocks() {
