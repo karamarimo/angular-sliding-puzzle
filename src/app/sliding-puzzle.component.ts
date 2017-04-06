@@ -49,7 +49,7 @@ export class SlidingPuzzleComponent implements OnInit {
     this.initGame();
   }
 
-  private initGame() {
+  initGame() {
     this.blockMap = [];
     this.blocks = [];
     let blankId = this.col_count * this.row_count - 1;

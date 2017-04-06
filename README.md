@@ -10,10 +10,8 @@ Run `npm install` to install all the modules the application depends on.
 
 ### JIT(Just in time) mode
 
-Run `npm start` to build and start the server, and navigate to `/index-jit.html` to see the result. File changes get immediately reflected.
+Run `npm start` to build and start the server, and navigate to `/` or `/index.html` to see the result. File changes get immediately reflected.
 
 ### AOT(Ahead of time) mode
 
-Run `npm run build:aot` to compile and rollup, `npm start` to build and start the server, and navigate to `/index.html` to see the result.
-
-You can also run `npm run build:aot` while the server is running.
+Run `npm run build:aot` to compile and rollup. It will generate a bundled javascript file at `dist/bundle.js`. Deploy it with `src/index-aot.html`.

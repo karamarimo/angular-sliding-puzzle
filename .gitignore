@@ -12,6 +12,7 @@ src/**/*.js
 e2e/**/*.js
 e2e/**/*.js.map
 aot
+dist
 _test-output
 _temp
 .vscode
