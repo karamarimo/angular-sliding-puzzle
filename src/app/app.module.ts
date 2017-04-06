@@ -8,6 +8,7 @@ import { SlidingPuzzleComponent } from './sliding-puzzle.component';
 import { ImagePickerComponent } from './image-picker.component';
 
 import { RangeArray } from './range-array.pipe';
+import { IntToMinSec } from "./int-to-min-sec.pipe";
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { RangeArray } from './range-array.pipe';
     AppComponent,
     SlidingPuzzleComponent,
     ImagePickerComponent,
-    RangeArray
+    RangeArray,
+    IntToMinSec
   ],
   providers: [
   ],

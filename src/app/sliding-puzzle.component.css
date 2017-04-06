@@ -18,6 +18,14 @@
   margin: 30px;
 }
 
+.time {
+  font-size: 20px;
+  text-align: center;
+  margin: 10px 0;
+  color: black;
+  font-family: sans-serif;
+}
+
 .block {
   position: absolute;
   border-radius: 5px;

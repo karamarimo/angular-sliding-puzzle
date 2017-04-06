@@ -37,6 +37,8 @@ export class SlidingPuzzleComponent implements OnInit {
   blockMap: Block[][];   // block object at each current coords
   showingResult = false;
   showOriginalPos = true;
+  time: number;
+  timerId: number;
 
   constructor(
   ) {
@@ -44,10 +46,10 @@ export class SlidingPuzzleComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initBlocks();
+    this.initGame();
   }
 
-  initBlocks() {
+  private initGame() {
     this.blockMap = [];
     this.blocks = [];
     let blankId = this.col_count * this.row_count - 1;
@@ -68,6 +70,17 @@ export class SlidingPuzzleComponent implements OnInit {
     this.blank_block = this.blocks[blankId];
 
     this.shuffleUntilNotAllInPlace();
+    this.resetTimer();
+  }
+
+  private resetTimer(): void {
+    window.clearInterval(this.timerId);
+    this.time = 0;
+    this.timerId = window.setInterval(() => {
+      if (!this.showingResult) {
+        this.time += 1;
+      }
+    }, 1000);
   }
 
   changeSize(key: string): void {
@@ -75,22 +88,22 @@ export class SlidingPuzzleComponent implements OnInit {
       case 'r-':
         if (this.row_count >= 3) {
           this.row_count -= 1;
-          this.initBlocks();
+          this.initGame();
         }
         break;
       case 'r+':
         this.row_count += 1;
-        this.initBlocks();
+        this.initGame();
         break;
       case 'c-':
         if (this.col_count >= 3) {
           this.col_count -= 1;
-          this.initBlocks();
+          this.initGame();
         }
         break;
       case 'c+':
         this.col_count += 1;
-          this.initBlocks();
+          this.initGame();
         break;
       default:
         break;
@@ -163,7 +176,7 @@ export class SlidingPuzzleComponent implements OnInit {
 
   closeResult() {
     this.showingResult = false;
-    this.shuffleUntilNotAllInPlace();
+    this.initGame();
     this.blank_block.styles.opacity = 0;
   }
 

@@ -1,6 +1,7 @@
 <div class="board">
   <!--<button (click)="row_count = (row_count == 0) ? 0 : row_count - 1; $event.stopPropagation()">-</button> Row
   <button (click)="row_count = row_count + 1; $event.stopPropagation()">+</button>-->
+  <div class="time">{{ time | intToMinSec }}</div>
   <div class="blocks"
        [style.width.px]="block_size * col_count + margin * (col_count - 1)"
        [style.height.px]="block_size * row_count + margin * (row_count - 1)">
@@ -12,9 +13,8 @@
     </ng-template>
     <div class="result-wrapper" *ngIf="showingResult" [@resultState]="'shown'">
       <div class="result">
-        <p>
-          Congratulations!
-        </p>
+        <h3>Congratulations!</h3>
+        <p>Score: {{ time | intToMinSec }}</p>
         <button (click)="closeResult()">Restart</button>
       </div>
     </div>
@@ -22,14 +22,14 @@
   <div class="controls">
     <div class="row-col-buttons">
       <span>
-        <button (click)="changeSize('r-')" [disabled]="row_count <= 2">-</button>
+        <button (click)="changeSize('r-')" [disabled]="row_count <= 2 || showingResult">-</button>
         Row
-        <button (click)="changeSize('r+')">+</button>
+        <button (click)="changeSize('r+')" [disabled]="showingResult">+</button>
       </span>
       <span>
-        <button (click)="changeSize('c-')" [disabled]="col_count <= 2">-</button>
+        <button (click)="changeSize('c-')" [disabled]="col_count <= 2 || showingResult">-</button>
         Column
-        <button (click)="changeSize('c+')">+</button>
+        <button (click)="changeSize('c+')" [disabled]="showingResult">+</button>
       </span>
     </div>
     <div>
